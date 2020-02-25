@@ -1,0 +1,31 @@
+!/bin/bash
+
+#Here we show files what we want to copy
+StringVal=`rsync -nhaP   /root/Dir1/ /root/Dir2/  | head -n -3 | tail -n+3`
+#Just list files in dir Dir2
+StringVa2=`ls /root/Dir2/`
+#dir where files
+FillString1="/root/Dir1/"
+FillString2="/root/Dir2/"
+
+#Clear /tmp/test.txt
+cp /dev/null /tmp/test.txt
+cp /dev/null /tmp/test2.txt
+
+#Here we go in loop and save all files shasum in /tmp/test.txt, for source(/root/Dir1) directory
+for val in $StringVal; do
+    echo $FillString1$val
+    sha1sum $FillString1$val | awk '{print $1}' >> /tmp/test.txt
+done
+
+#echo $FillString2$StringVa2
+echo testbrake
+
+#Here we go in loop and save all files shasum in /tmp/test2.txt, for destination(/root/Dir2) directory
+for val1 in $StringVal; do
+    echo $FillString2$val1
+#    ls $FillString2$val1
+    sha1sum $FillString2$val1 | awk '{print $1}' >> /tmp/test2.txt
+done
+
+#after we can check if hash sum difference between two directory
